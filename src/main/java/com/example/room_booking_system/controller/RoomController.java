@@ -1,10 +1,13 @@
 package com.example.room_booking_system.controller;
 
-import com.example.room_booking_system.entity.Room;
+import com.example.room_booking_system.dto.RoomRequest;
+import com.example.room_booking_system.dto.RoomResponse;
 import com.example.room_booking_system.service.RoomService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -16,19 +19,20 @@ public class RoomController {
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
     }
+
     @PostMapping
-    public ResponseEntity<Room> createRoom(@RequestBody Room room){
-        Room created = roomService.createRoom(room);
+    public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomRequest roomRequest){
+        RoomResponse created = roomService.createRoom(roomRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping
-    public List<Room> getAllRooms(){
+    public List<RoomResponse> getAllRooms(){
         return roomService.getAllRooms();
     }
 
     @GetMapping("/{id}")
-    public Room getRoomById(@PathVariable Long id){
+    public RoomResponse getRoomById(@PathVariable Long id){
         return roomService.getRoomById(id);
     }
 }

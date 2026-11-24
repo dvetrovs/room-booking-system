@@ -23,5 +23,5 @@ public class Room {
 
     private String description;
 
-    private boolean active = true;
+    private boolean active;
 }
