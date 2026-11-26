@@ -21,6 +21,7 @@ public class Room {
     @Column(nullable = false)
     private int capacity;
 
+    @Column(length = 500)
     private String description;
 
     private boolean active;
