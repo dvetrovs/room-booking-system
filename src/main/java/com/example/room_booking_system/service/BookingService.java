@@ -33,7 +33,7 @@ public class BookingService {
 
     @Transactional
     public BookingResponse createBooking(BookingRequest bookingRequest){
-        if (bookingRequest.endTime().isAfter(bookingRequest.startTime())) {
+        if (!bookingRequest.endTime().isAfter(bookingRequest.startTime())) {
             throw new InvalidBookingException("endTime must be after startTime");
         }
         if (bookingRequest.startTime().isBefore(Instant.now())) {
