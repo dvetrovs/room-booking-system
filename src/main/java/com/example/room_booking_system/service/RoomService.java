@@ -26,9 +26,9 @@ public class RoomService {
             throw new ConflictException("Room already exists: " + request.name());
         }
         Room room = new Room();
-        room.setName(request.name());
+        room.setName(request.name().trim());
         room.setCapacity(request.capacity());
-        room.setDescription(request.description());
+        room.setDescription(request.description().trim());
         room.setActive(true);
         return RoomResponse.from(roomRepository.save(room));
     }
