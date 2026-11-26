@@ -13,14 +13,12 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException e){
-        ErrorResponse body = new ErrorResponse(404, e.getMessage(), LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        return build(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleConflict(ConflictException e){
-        ErrorResponse body = new ErrorResponse(409, e.getMessage(), LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+        return build(HttpStatus.CONFLICT, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -28,7 +26,11 @@ public class GlobalExceptionHandler {
         String message = e.getBindingResult().getFieldErrors().stream()
                 .map(err -> err.getField() + ": " + err.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        ErrorResponse body = new ErrorResponse(400, message, LocalDateTime.now());
-        return  ResponseEntity.badRequest().body(body);
+        return build(HttpStatus.BAD_REQUEST, message);
+    }
+
+    private ResponseEntity<ErrorResponse> build(HttpStatus status, String message) {
+        ErrorResponse body = new ErrorResponse(status.value(), message, LocalDateTime.now());
+        return ResponseEntity.status(status).body(body);
     }
 }
