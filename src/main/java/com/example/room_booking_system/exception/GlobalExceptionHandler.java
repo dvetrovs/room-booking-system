@@ -21,6 +21,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.CONFLICT, e.getMessage());
     }
 
+    @ExceptionHandler(InvalidBookingException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBooking(InvalidBookingException e){
+        return build(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e){
         String message = e.getBindingResult().getFieldErrors().stream()
