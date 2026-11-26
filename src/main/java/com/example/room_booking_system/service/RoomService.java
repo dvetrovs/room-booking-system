@@ -25,10 +25,14 @@ public class RoomService {
         if (roomRepository.existsByName(request.name())){
             throw new ConflictException("Room already exists: " + request.name());
         }
+        String description = request.description() != null
+                ? request.description().trim()
+                : null;
+
         Room room = new Room();
         room.setName(request.name().trim());
         room.setCapacity(request.capacity());
-        room.setDescription(request.description().trim());
+        room.setDescription(description);
         room.setActive(true);
         return RoomResponse.from(roomRepository.save(room));
     }
