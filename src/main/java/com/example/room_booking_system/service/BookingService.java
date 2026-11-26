@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -63,5 +64,24 @@ public class BookingService {
         booking.setStatus(BookingStatus.CONFIRMED);
 
         return BookingResponse.from(bookingRepository.save(booking));
+    }
+
+    public List<BookingResponse> getBookingsForUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new ResourceNotFoundException("User not found with id " + userId);
+        }
+        return bookingRepository.findByUserIdOrderByStartTimeDesc(userId).stream()
+                .map(BookingResponse::from)
+                .toList();
+    }
+
+    @Transactional
+    public void cancelBooking(Long bookingId, Long userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Booking not found with id " + bookingId));
+        if (!booking.getUser().getId().equals(userId)) {
+            throw new InvalidBookingException("Booking belongs to another user");
+        }
+        booking.cancel();
     }
 }
