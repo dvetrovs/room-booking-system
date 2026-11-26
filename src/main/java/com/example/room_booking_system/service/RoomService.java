@@ -4,7 +4,7 @@ import com.example.room_booking_system.dto.RoomRequest;
 import com.example.room_booking_system.dto.RoomResponse;
 import com.example.room_booking_system.entity.Room;
 import com.example.room_booking_system.exception.ResourceNotFoundException;
-import com.example.room_booking_system.exception.RoomAlreadyExistsException;
+import com.example.room_booking_system.exception.ConflictException;
 import com.example.room_booking_system.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ public class RoomService {
     @Transactional
     public RoomResponse createRoom(RoomRequest request) {
         if (roomRepository.existsByName(request.name())){
-            throw new RoomAlreadyExistsException("Room already exists: " + request.name());
+            throw new ConflictException("Room already exists: " + request.name());
         }
         Room room = new Room();
         room.setName(request.name());

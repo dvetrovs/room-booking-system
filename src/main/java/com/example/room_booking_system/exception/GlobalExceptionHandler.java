@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleConflict(RoomAlreadyExistsException e){
+    public ResponseEntity<ErrorResponse> handleConflict(ConflictException e){
         ErrorResponse body = new ErrorResponse(409, e.getMessage(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
