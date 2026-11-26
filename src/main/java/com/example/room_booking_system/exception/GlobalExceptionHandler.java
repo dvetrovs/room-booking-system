@@ -3,8 +3,10 @@ package com.example.room_booking_system.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -24,6 +26,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidBookingException.class)
     public ResponseEntity<ErrorResponse> handleInvalidBooking(InvalidBookingException e){
         return build(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException e) {
+        return build(HttpStatus.BAD_REQUEST, "Invalid value for parameter '" + e.getName() + "'");
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingParam(MissingServletRequestParameterException e) {
+        return build(HttpStatus.BAD_REQUEST, "Missing parameter '" + e.getParameterName() + "'");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
